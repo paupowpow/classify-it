@@ -24,11 +24,11 @@ class Vocabulary:
 
                     string = open_file.read()
 
-                    # get tokens and make set
+                    # get tokens and make into set
                     tokens = self.__tokenize(string)
+                    vocabulary = self.__vocabularize(tokens)
 
-                    # or just append string to dict
-                    texts[c].append(tokens)
+                    texts[c].append(vocabulary)
                     open_file.close()
 
         return texts
@@ -38,21 +38,23 @@ class Vocabulary:
         text = self.__remove_interpunction(string)
 
         # splits into separate words
-        token_list = text.split()
+        tokens = text.split()
 
         # if list not empty
-        if token_list:
-            token_list = self.__normalize_tokens(token_list)
+        if tokens:
+            tokens = self.__normalize_tokens(tokens)
 
-        print(token_list)
-
-        return token_list
+        return tokens
 
     def __remove_interpunction(self, text):
-        text = re.sub(r'[?:,\.]', '', text)
+        # filters out: 0-9 ! ? : , . ( ) " ' &
+        text = re.sub(r'[0-9!?:,\.\(\)\"\'\&]', '', text)
         text = re.sub(r'[-]', ' ', text)
         return text
 
-    def __normalize_tokens(self, token_list):
-        token_list = [element.lower() for element in token_list]
-        return token_list
+    def __normalize_tokens(self, tokens):
+        tokens = [element.lower() for element in tokens]
+        return tokens
+
+    def __vocabularize(self, tokens):
+        return set(tokens)
