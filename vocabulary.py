@@ -1,11 +1,7 @@
-import os
-import codecs
 import re
-from collections import Counter
+# from collections import Counter
 
 class Vocabulary:
-
-
 
     def __init__(self, strings):
         # print(type(strings))
