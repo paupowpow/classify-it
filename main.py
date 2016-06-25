@@ -26,10 +26,11 @@ class Main:
     def __write_vocabulary(self, c, vocabulary):
         filename = c + "_vocabulary" + ".txt"
 
+        # if file does not exist, it will be created
         file = codecs.open(filename, 'w+', "utf-8")
 
         for item in vocabulary:
-            file.write("%s\n" % item)
+            file.write("%s " % item)
 
     def __access_strings(self, c):
         strings = []
