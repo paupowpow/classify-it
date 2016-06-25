@@ -6,7 +6,6 @@ class Main:
     classes = ["politik", "sport", "wirtschaft"]
 
     def __init__(self):
-        print("init!")
         vocab = Vocabulary(self.classes)
 
 start_time = time.time()
