@@ -1,21 +1,15 @@
-import os
+from vocabulary import Vocabulary
+import time
 
 class Main:
 
-    train_paths = ["data/politik/train", "data/sport/train", "data/wirtschaft/train"]
+    classes = ["politik", "sport", "wirtschaft"]
 
-    vocabularies = []
+    def __init__(self):
+        print("init!")
+        vocab = Vocabulary(self.classes)
 
-    for path in train_paths:
-        print(path)
-        # for each doc in /train
-            # get words and make set
-
-        for f in os.listdir(path):
-            if f.endswith(".txt"):
-                path_to_file = path + "/" + f
-
-                open_file = open(path_to_file)
-                string = open_file.read(30)
-                print(path_to_file + ": " + string)
-                open_file.close()
+start_time = time.time()
+Main()
+print('--------------------')
+print("Execution time is %s seconds" % "%0.2f" % (time.time() - start_time))
