@@ -1,58 +1,67 @@
-import os
-import codecs
 import re
+# from collections import Counter
 
 class Vocabulary:
-    def __init__(self, classes):
-        self.__classes = classes
-        self.__texts = self.__get_texts(self.__classes)
 
-    def __get_texts(self, classes):
-        for c in classes:
-            # concatenate path
-            path = "data/" + c + "/train"
+    def __init__(self, strings):
+        # print(type(strings))
+        # print(strings)
 
-            # create empty dict for results
-            texts = {}
-            texts[c] = []
+        self.__vocabulary = self.__extract_vocabulary(strings)
 
-            # for each doc in /train
-            for f in os.listdir(path):
-                if f.endswith(".txt"):
-                    path_to_file = path + "/" + f
-                    open_file = codecs.open(path_to_file, "r", "utf-8")
+        # print("===========")
+        # print("vocabulary:")
+        # print(Counter(vocabulary))
+        #
+        # print(vocabulary)
 
-                    string = open_file.read()
 
-                    # get tokens and make set
-                    tokens = self.__tokenize(string)
+    def __extract_vocabulary(self, strings):
+        all_tokens = []
 
-                    # or just append string to dict
-                    texts[c].append(tokens)
-                    open_file.close()
+        for s in strings:
+            tokens = self.__tokenize(s)
+            all_tokens.append(tokens)
 
-        return texts
+        # flatten: list of list => list
+        # think of it exactly like nested for loops:
+        # for sublist in l: for item in sublist: yield item
+        flattened_tokens = [item for sublist in all_tokens for item in sublist]
+
+        # print("----------")
+        # print("flattened_tokens:")
+        # print(Counter(flattened_tokens))
+
+        return set(flattened_tokens)
+
 
     def __tokenize(self, string):
-        # removes interpunction, in this case "." and ","
         text = self.__remove_interpunction(string)
 
         # splits into separate words
-        token_list = text.split()
+        tokens = text.split()
 
         # if list not empty
-        if token_list:
-            token_list = self.__normalize_tokens(token_list)
+        if tokens:
+            tokens = self.__normalize_tokens(tokens)
 
-        print(token_list)
-
-        return token_list
+        return tokens
 
     def __remove_interpunction(self, text):
-        text = re.sub(r'[?:,\.]', '', text)
+        # filters out: 0-9 ! ? : , . ( ) " ' &
+        text = re.sub(r'[0-9!?:,\.\(\)\"\'\&]', '', text)
+
+        # replaces - with " "
         text = re.sub(r'[-]', ' ', text)
+
         return text
 
-    def __normalize_tokens(self, token_list):
-        token_list = [element.lower() for element in token_list]
-        return token_list
+    def __normalize_tokens(self, tokens):
+        tokens = [element.lower() for element in tokens]
+        return tokens
+
+    def __vocabularize(self, tokens):
+        return set(tokens)
+
+    def get_vocabulary(self):
+        return self.__vocabulary
