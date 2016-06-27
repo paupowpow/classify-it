@@ -15,7 +15,12 @@ class Main:
 
     def __train(self, classes):
         vocabularies = self.__extract_vocabularies_from_data(classes)
-        number_of_docs = self.__count_docs()
+        number_of_all_docs = self.__count_docs(classes)
+        prior = {}
+        for c in classes:
+            number_of_docs_in_c = self.__count_docs([c])
+            prior[c] = number_of_docs_in_c/number_of_all_docs
+            text_c = self.__concatenate_text_of_all_docs_in_class()
 
     def __extract_vocabularies_from_data(self, classes):
         vocabularies = {}
@@ -61,12 +66,15 @@ class Main:
 
         return strings
 
-    def __count_docs(self):
+    def __count_docs(self, classes):
         number_of_docs = 0
-        for c in self.classes:
+        for c in classes:
             DIR = 'data/'+c+'/train'
             number_of_docs += len([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])
-        return  number_of_docs
+        return number_of_docs
+
+    def __concatenate_text_of_all_docs_in_class(self):
+        return 0
 
 start_time = time.time()
 Main()
