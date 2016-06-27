@@ -1,16 +1,25 @@
-from vocabulary import Vocabulary
-import time
-import os
 import codecs
+import os
+import os.path
+import time
+
+from vocabulary import Vocabulary
+
 
 class Main:
 
     classes = ["politik", "sport", "wirtschaft"]
 
     def __init__(self):
-        vocabularies = {}
+        self.__train(self.classes)
 
-        for c in self.classes:
+    def __train(self, classes):
+        vocabularies = self.__extract_vocabularies_from_data(classes)
+        number_of_docs = self.__count_docs()
+
+    def __extract_vocabularies_from_data(self, classes):
+        vocabularies = {}
+        for c in classes:
             print(c)
             strings = self.__access_strings(c)
             vocabulary = Vocabulary(strings)
@@ -22,6 +31,7 @@ class Main:
             vocabularies[c] = curr_vocabulary
 
             print(vocabularies[c])
+        return vocabularies
 
     def __write_vocabulary(self, c, vocabulary):
         filename = c + "_vocabulary" + ".txt"
@@ -51,10 +61,14 @@ class Main:
 
         return strings
 
+    def __count_docs(self):
+        number_of_docs = 0
+        for c in self.classes:
+            DIR = 'data/'+c+'/train'
+            number_of_docs += len([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])
+        return  number_of_docs
 
 start_time = time.time()
 Main()
 print('--------------------')
 print("Execution time is %s seconds" % "%0.2f" % (time.time() - start_time))
-
-#comment
