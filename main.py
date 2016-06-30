@@ -14,7 +14,8 @@ class Main:
     concatenated_text_of_all_classes = {}
 
     def __init__(self):
-        self.__train(self.classes, self.concatenated_text_of_all_classes)
+        train_results = self.__train(self.classes, self.concatenated_text_of_all_classes)
+        print('')
 
     def __train(self, classes, concatenated_text_of_all_classes):
         prior = {}
@@ -34,9 +35,7 @@ class Main:
             number_of_all_tokens_in_class = len(concatenated_text_of_all_classes[c].split())
             for t in vocabularies:
                 condprob[c][t] = (t_ct[t]+1)/(number_of_all_tokens_in_class + len(vocabularies))
-        results = collections.namedtuple('Results', ['x', 'y', 'z'])
-        results = results(vocabularies, prior, condprob)
-        return results
+        return self.__return_multiple_values(vocabularies, prior, condprob)
 
     def __extract_vocabularies_from_data(self, classes):
         vocabularies = set()
@@ -107,6 +106,11 @@ class Main:
 
     def __count_tokens_of_term(self, text, t):
         return text.count(' '+t+' ')
+
+    def __return_multiple_values(self, x, y, z):
+        results = collections.namedtuple('Results', ['x', 'y', 'z'])
+        results = results(x, y, z)
+        return results
 
 start_time = time.time()
 Main()
