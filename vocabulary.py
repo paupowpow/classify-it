@@ -48,11 +48,8 @@ class Vocabulary:
         return tokens
 
     def __remove_interpunction(self, text):
-        # filters out: 0-9 ! ? : , . ( ) " ' &
-        text = re.sub(r'[0-9!?:,\.\(\)\"\'\&]', '', text)
-
-        # replaces - with " "
-        text = re.sub(r'[-]', ' ', text)
+        # filters out: 0-9 ! ? + - : , ; . ( ) " ' &
+        text = re.sub(r'[0-9!?+-:,;\.\(\)\"\'\&]', '', text)
 
         return text
 

@@ -1,3 +1,6 @@
 .DS_Store
 .idea
 __pycache__
+politik_vocabulary.txt
+sport_vocabulary.txt
+wirtschaft_vocabulary.txt

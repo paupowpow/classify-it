@@ -16,6 +16,7 @@ class Main:
 
     def __train(self, classes):
         vocabularies = self.__extract_vocabularies_from_data(classes) #set of all vocabularies from all classes
+        print(vocabularies)
         number_of_all_docs = self.__count_docs(classes)
         prior = {}
         self.concatenated_text_of_all_classes = self.__concatenate(self.concatenated_text_of_all_classes)
@@ -24,9 +25,8 @@ class Main:
             prior[c] = number_of_docs_in_c/number_of_all_docs
 
     def __extract_vocabularies_from_data(self, classes):
-        vocabularies = {}
+        vocabularies = set()
         for c in classes:
-            print(c)
             strings = self.__access_strings(c)
             vocabulary = Vocabulary(strings)
 
@@ -34,10 +34,9 @@ class Main:
 
             self.__write_vocabulary(c, curr_vocabulary)
 
-            vocabularies[c] = curr_vocabulary
+            vocabularies |= curr_vocabulary #append set
 
-            print(vocabularies[c])
-        return vocabularies
+        return sorted(vocabularies)
 
     def __write_vocabulary(self, c, vocabulary):
         filename = c + "_vocabulary" + ".txt"
