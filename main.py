@@ -1,7 +1,9 @@
 import codecs
+import collections
 import os
 import os.path
 import time
+import re
 
 from vocabulary import Vocabulary
 
@@ -12,17 +14,29 @@ class Main:
     concatenated_text_of_all_classes = {}
 
     def __init__(self):
-        self.__train(self.classes)
+        self.__train(self.classes, self.concatenated_text_of_all_classes)
 
-    def __train(self, classes):
-        vocabularies = self.__extract_vocabularies_from_data(classes) #set of all vocabularies from all classes
-        print(vocabularies)
-        number_of_all_docs = self.__count_docs(classes)
+    def __train(self, classes, concatenated_text_of_all_classes):
         prior = {}
-        self.concatenated_text_of_all_classes = self.__concatenate(self.concatenated_text_of_all_classes)
+        condprob = {}
+
+        vocabularies = self.__extract_vocabularies_from_data(classes)
+        number_of_all_docs = self.__count_docs(classes)
+        concatenated_text_of_all_classes = self.__concatenate(concatenated_text_of_all_classes)
         for c in classes:
+            t_ct = {}
+            condprob[c] = {}
             number_of_docs_in_c = self.__count_docs([c])
             prior[c] = number_of_docs_in_c/number_of_all_docs
+            for t in vocabularies:
+                t_ct[t] = self.__count_tokens_of_term(concatenated_text_of_all_classes[c], t)
+
+            number_of_all_tokens_in_class = len(concatenated_text_of_all_classes[c].split())
+            for t in vocabularies:
+                condprob[c][t] = (t_ct[t]+1)/(number_of_all_tokens_in_class + len(vocabularies))
+        results = collections.namedtuple('Results', ['x', 'y', 'z'])
+        results = results(vocabularies, prior, condprob)
+        return results
 
     def __extract_vocabularies_from_data(self, classes):
         vocabularies = set()
@@ -80,11 +94,19 @@ class Main:
         string = ''
         for c in concatenated_text_of_all_classes:
             for doc in concatenated_text_of_all_classes[c]:
-                string += doc
+                string += self.__prettify_string(doc)
             result[c] = string
             string = ''
         return result
 
+    def __prettify_string(self, string):
+        string = re.sub(r'[0-9!?+:,;\.\(\)\"\'\&]', '', string)
+        string = re.sub(r'[-]', ' ', string)
+        string = re.sub(r'[\n\s]+', ' ', string)
+        return string.lower()
+
+    def __count_tokens_of_term(self, text, t):
+        return text.count(' '+t+' ')
 
 start_time = time.time()
 Main()
