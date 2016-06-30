@@ -37,6 +37,9 @@ class Main:
                 condprob[c][t] = (t_ct[t]+1)/(number_of_all_tokens_in_class + len(vocabularies))
         return self.__return_multiple_values(vocabularies, prior, condprob)
 
+    def __apply_multinomial_nb(self,):
+        print('')
+
     def __extract_vocabularies_from_data(self, classes):
         vocabularies = set()
         for c in classes:
