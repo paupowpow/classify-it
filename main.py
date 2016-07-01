@@ -41,12 +41,15 @@ class Main:
     def __classify_all_files(self, classes, prior, condprob):
         for c in classes:
             path = "data/" + c + '/test'
+            print(c + '/test')
 
             # for each doc in /train
             for d in os.listdir(path):
                 if d.endswith(".txt"):
                     result = self.__apply_multinomial_nb(d, path, classes, prior, condprob)
-                    print(d+': '+ result)
+                    d = os.path.splitext(d)[0]
+                    print(d + ': '+ result)
+            print('')
 
     def __apply_multinomial_nb(self, d, path, classes, prior, condprob):
         score = {}
